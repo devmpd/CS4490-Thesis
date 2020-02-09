@@ -4,6 +4,7 @@ import com.mikedavis.CS4490.model.SensorData;
 import com.mikedavis.CS4490.model.SensorMeta;
 import com.mikedavis.CS4490.service.mongodb.SensorLogService;
 import com.mikedavis.CS4490.mongodao.MongoDAO;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,5 +38,10 @@ public class SensorLogController {
     @RequestMapping("/meta/{id}")
     public SensorMeta getSensorMetaById(@PathVariable String id){
         return sensorLogService.getSensorMetaDataByID(id);
+    }
+
+    @RequestMapping("/data/json/{id}")
+    public JSONArray getSensorJSONDataById(@PathVariable String id, @RequestParam String date){
+        return sensorLogService.getSensorJSONDataByID(id, date);
     }
 }

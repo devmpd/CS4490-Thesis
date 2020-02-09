@@ -6,6 +6,7 @@ import com.mikedavis.CS4490.model.SensorMeta;
 import com.mikedavis.CS4490.mongodao.MongoDAO;
 import com.mikedavis.CS4490.service.sql.SensorService;
 import com.mongodb.DBObject;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -16,9 +17,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Stream;
 
 @Service
 public class SensorLogServiceImpl implements SensorLogService {
@@ -31,6 +30,45 @@ public class SensorLogServiceImpl implements SensorLogService {
 
     @Autowired
     MongoDAO mongoDAO;
+
+    public JSONArray getSensorJSONDataByID(String id, String date){
+        List<DBObject> sensorLogDoc = mongoTemplate.find(new Query(Criteria.where("_id").is(id + "-" + date)), DBObject.class, "5765_tls");
+        JSONArray data = new JSONArray();
+        for(DBObject object : sensorLogDoc){
+            for(String key : object.keySet()){
+                if(key.matches("^\\d{2}:\\d{2}:\\d{2}$")){
+                    JSONArray dataPoint = new JSONArray();
+                    dataPoint.put(key);
+                    dataPoint.put(object.get(key));
+                    data.put(dataPoint);
+                }
+            }
+        }
+        return data;
+    }
+
+    public void addJSONDataByID(String id, String date, JSONArray jsonArray){
+        List<DBObject> sensorLogDoc = mongoTemplate.find(new Query(Criteria.where("_id").is(id + "-" + date)), DBObject.class, "5765_tls");
+        SimpleDateFormat simpleDateFormat = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Long timeStamp;
+        for(DBObject object : sensorLogDoc){
+            for(String key : object.keySet()){
+                if(key.matches("^\\d{2}:\\d{2}:\\d{2}$")){
+                    JSONArray dataPoint = new JSONArray();
+                    String start = date + " " + key;
+                    try{
+                        timeStamp = simpleDateFormat.parse(start).getTime();
+                        dataPoint.put(timeStamp);
+                        dataPoint.put(object.get(key));
+                        jsonArray.put(dataPoint);
+                    } catch(ParseException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
 
     public SensorLog getSensorLogByID(String id, String date){
         List<DBObject> sensorLogDoc = mongoTemplate.find(new Query(Criteria.where("_id").is(id + "-" + date)), DBObject.class, "5765_tls");
@@ -51,9 +89,8 @@ public class SensorLogServiceImpl implements SensorLogService {
 
     public SensorData getSensorDataByID(String id, String date){
         SensorData sensorData = new SensorData();
-        List<SensorLog> trendLog = new ArrayList<>();
-        trendLog.add(getSensorLogByID(id, date));
-        sensorData.setData(trendLog);
+        JSONArray data = getSensorJSONDataByID(id, date);
+        sensorData.setData(data.toString());
         sensorData.setSensor(sensorService.getSensor(id));
         sensorData.setSensorMeta(getSensorMetaDataByID(id));
         return sensorData;
@@ -67,12 +104,13 @@ public class SensorLogServiceImpl implements SensorLogService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate startDate = LocalDate.parse(start, formatter);
         LocalDate endDate = LocalDate.parse(end, formatter);
-        List<SensorLog> trendLogs = new ArrayList<>();
+        JSONArray data = new JSONArray();
         for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1))
         {
-            trendLogs.add(getSensorLogByID(id, date.toString()));
+            addJSONDataByID(id, date.toString(), data);
         }
-        sensorData.setData(trendLogs);
+
+        sensorData.setData(data.toString());
 
         return sensorData;
     }
@@ -86,13 +124,13 @@ public class SensorLogServiceImpl implements SensorLogService {
         String end = sensorData.getSensorMeta().getLast();
         LocalDate startDate = LocalDate.parse(start, formatter);
         LocalDate endDate = LocalDate.parse(end, formatter);
-        List<SensorLog> trendLogs = new ArrayList<>();
+        JSONArray data = new JSONArray();
         for (LocalDate date = startDate; date.isBefore(endDate); date = date.plusDays(1))
         {
-            trendLogs.add(getSensorLogByID(id, date.toString()));
+            addJSONDataByID(id, date.toString(), data);
         }
-        sensorData.setData(trendLogs);
 
+        sensorData.setData(data.toString());
         return sensorData;
     }
 

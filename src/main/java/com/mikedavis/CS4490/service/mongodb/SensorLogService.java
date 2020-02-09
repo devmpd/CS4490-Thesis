@@ -2,14 +2,17 @@ package com.mikedavis.CS4490.service.mongodb;
 
 import com.mikedavis.CS4490.model.SensorData;
 import com.mikedavis.CS4490.model.SensorMeta;
+import org.json.JSONArray;
 
 public interface SensorLogService {
 
-    public SensorData getSensorDataByID(String id, String date);
+    JSONArray getSensorJSONDataByID(String id, String date);
 
-    public SensorMeta getSensorMetaDataByID(String id);
+    SensorData getSensorDataByID(String id, String date);
 
-    public SensorData getSensorDataByDateRange(String id, String startDate, String endDate);
+    SensorMeta getSensorMetaDataByID(String id);
 
-    public SensorData getAllSensorDataByID(String id);
+    SensorData getSensorDataByDateRange(String id, String startDate, String endDate);
+
+    SensorData getAllSensorDataByID(String id);
 }
