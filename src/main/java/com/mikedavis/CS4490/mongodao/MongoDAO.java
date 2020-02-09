@@ -9,4 +9,5 @@ import java.util.List;
 public interface MongoDAO {
     public SensorMeta findSensorMetaById(String id);
     public List<DBObject> getSensorLogByID(String id, String date);
+    public List<SensorMeta> findSensorMetasById(String id);
 }

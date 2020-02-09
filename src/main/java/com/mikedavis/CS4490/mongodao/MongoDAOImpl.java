@@ -25,4 +25,9 @@ public class MongoDAOImpl implements MongoDAO{
     public List<DBObject> getSensorLogByID(String id, String date){
         return  mongoTemplate.find(new Query(Criteria.where("_id").is(id + "-" + date)), DBObject.class, "5765_tls");
     }
+
+    @Override
+    public List<SensorMeta> findSensorMetasById(String id){
+        return mongoTemplate.find(new Query(Criteria.where("name").regex(id)), SensorMeta.class, "5765_meta");
+    }
 }

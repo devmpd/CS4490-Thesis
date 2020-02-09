@@ -8,6 +8,8 @@ import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/logs")
@@ -43,5 +45,10 @@ public class SensorLogController {
     @RequestMapping("/data/json/{id}")
     public JSONArray getSensorJSONDataById(@PathVariable String id, @RequestParam String date){
         return sensorLogService.getSensorJSONDataByID(id, date);
+    }
+
+    @RequestMapping("/find/{id}")
+    public List<SensorMeta> findSensorMetasById(@PathVariable String id){
+        return sensorLogService.findSensorMetasById(id);
     }
 }
