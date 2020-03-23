@@ -24,9 +24,4 @@ public class BuildingController {
         return buildingService.getBuilding(id);
     }
 
-    @RequestMapping("/test")
-    public String test(){
-        return "Is this fucking working?";
-    }
-
 }

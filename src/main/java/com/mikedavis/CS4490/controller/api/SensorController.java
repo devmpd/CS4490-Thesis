@@ -1,12 +1,13 @@
 package com.mikedavis.CS4490.controller.api;
 
+import com.mikedavis.CS4490.model.AdditionalMetadata;
 import com.mikedavis.CS4490.model.Sensor;
 import com.mikedavis.CS4490.service.sql.SensorService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +26,11 @@ public class SensorController {
     @RequestMapping("/building/{buildingId}")
     public List<Sensor> getSensorsByBuilding(@PathVariable String buildingId){
         return sensorService.getSensorsByBuilding(buildingId);
+    }
+
+    @RequestMapping(path = "/sensor/addmetadata", method = RequestMethod.POST)
+    public ResponseEntity<String> additionalMetadata(@RequestBody AdditionalMetadata additionalMetadata){
+        sensorService.insertAdditionalMetadata(additionalMetadata);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

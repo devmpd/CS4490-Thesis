@@ -119,6 +119,7 @@ public class SensorLogServiceImpl implements SensorLogService {
     public SensorData getAllSensorDataByID(String id){
         SensorData sensorData = new SensorData();
         sensorData.setSensor(sensorService.getSensor(id));
+        sensorData.setAdditionalMetadata(sensorService.getAdditionalMetadata(id));
         sensorData.setSensorMeta(getSensorMetaDataByID(id));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String start = sensorData.getSensorMeta().getFirst();
