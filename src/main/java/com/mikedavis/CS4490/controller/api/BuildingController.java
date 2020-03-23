@@ -1,6 +1,7 @@
 package com.mikedavis.CS4490.controller.api;
 
 import com.mikedavis.CS4490.model.Building;
+import com.mikedavis.CS4490.model.Cluster;
 import com.mikedavis.CS4490.service.sql.BuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,5 +24,8 @@ public class BuildingController {
     public Building getBuilding(@PathVariable String id){
         return buildingService.getBuilding(id);
     }
+
+    @RequestMapping("/clusters")
+    public List<Cluster> getClusters() { return buildingService.getClusters(); }
 
 }
