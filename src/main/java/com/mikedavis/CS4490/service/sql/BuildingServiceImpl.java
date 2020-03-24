@@ -28,5 +28,5 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     @Override
-    public List<Cluster> getClusters() { return clusterMapper.getAllClusters(); }
+    public List<Cluster> getClusters(String id) { return clusterMapper.getBuildingClusters(id); }
 }

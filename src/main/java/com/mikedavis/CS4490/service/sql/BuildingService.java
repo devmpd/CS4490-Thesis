@@ -12,5 +12,5 @@ public interface BuildingService {
 
     public List<Building> getBuildings();
 
-    public List<Cluster> getClusters();
+    public List<Cluster> getClusters(String id);
 }

@@ -17,6 +17,6 @@ public interface ClusterMapper {
             @Result(property = "description", column = "description"),
             @Result(property = "buildingId", column = "building_id")
     })
-    @Select("SELECT * FROM Clusters")
-    List<Cluster> getAllClusters();
+    @Select("SELECT * FROM Clusters WHERE building_id = #{id}")
+    List<Cluster> getBuildingClusters(String id);
 }

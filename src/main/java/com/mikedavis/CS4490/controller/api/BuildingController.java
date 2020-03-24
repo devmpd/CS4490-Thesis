@@ -25,7 +25,7 @@ public class BuildingController {
         return buildingService.getBuilding(id);
     }
 
-    @RequestMapping("/clusters")
-    public List<Cluster> getClusters() { return buildingService.getClusters(); }
+    @RequestMapping("/clusters/{id}")
+    public List<Cluster> getClusters(@PathVariable String id) { return buildingService.getClusters(id); }
 
 }
