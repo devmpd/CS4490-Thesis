@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/events")
@@ -19,5 +21,10 @@ public class EventController {
     public ResponseEntity<String> addEvent(@RequestBody Event event){
         eventService.addEvent(event);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @RequestMapping("/get")
+    public List<Event> getAllEvents(@RequestParam String buildingid, @RequestParam String sensorid){
+        return eventService.getEvents(buildingid, sensorid);
     }
 }

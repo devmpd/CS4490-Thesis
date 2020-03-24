@@ -5,7 +5,7 @@ import com.mikedavis.CS4490.model.Event;
 import java.util.List;
 
 public interface EventService {
-    public List<Event> getEvents(String clusterId, String buildingId);
+    public List<Event> getEvents(String buildingId, String sensorId);
 
     public void addEvent(Event event);
 }

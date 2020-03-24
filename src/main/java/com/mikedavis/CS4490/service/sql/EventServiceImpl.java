@@ -13,8 +13,8 @@ public class EventServiceImpl implements EventService {
     private EventMapper eventMapper;
 
     @Override
-    public List<Event> getEvents(String sensorId, String buildingId){
-        return null;
+    public List<Event> getEvents(String buildingId, String sensorId){
+        return eventMapper.getEvents(buildingId, sensorId);
     }
 
     @Override

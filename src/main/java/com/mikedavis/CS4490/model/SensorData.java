@@ -13,4 +13,5 @@ public class SensorData implements Serializable {
     private String data;
     private SensorMeta sensorMeta;
     private List<AdditionalMetadata> additionalMetadata;
+    private List<Event> events;
 }

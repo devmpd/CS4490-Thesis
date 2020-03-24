@@ -1,9 +1,8 @@
 package com.mikedavis.CS4490.service.mongodb;
 
-import com.mikedavis.CS4490.model.SensorData;
-import com.mikedavis.CS4490.model.SensorLog;
-import com.mikedavis.CS4490.model.SensorMeta;
+import com.mikedavis.CS4490.model.*;
 import com.mikedavis.CS4490.mongodao.MongoDAO;
+import com.mikedavis.CS4490.service.sql.EventService;
 import com.mikedavis.CS4490.service.sql.SensorService;
 import com.mongodb.DBObject;
 import org.json.JSONArray;
@@ -28,6 +27,9 @@ public class SensorLogServiceImpl implements SensorLogService {
 
     @Autowired
     SensorService sensorService;
+
+    @Autowired
+    EventService eventService;
 
     @Autowired
     MongoDAO mongoDAO;
@@ -118,7 +120,8 @@ public class SensorLogServiceImpl implements SensorLogService {
 
     public SensorData getAllSensorDataByID(String id){
         SensorData sensorData = new SensorData();
-        sensorData.setSensor(sensorService.getSensor(id));
+        Sensor sensor = sensorService.getSensor(id);
+        sensorData.setSensor(sensor);
         sensorData.setAdditionalMetadata(sensorService.getAdditionalMetadata(id));
         sensorData.setSensorMeta(getSensorMetaDataByID(id));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -146,8 +149,9 @@ public class SensorLogServiceImpl implements SensorLogService {
                 return compare;
             }
         });
-
         sensorData.setData(data.toString());
+        List<Event> events = eventService.getEvents(sensor.getBuildingId(), id);
+        sensorData.setEvents(events);
         return sensorData;
     }
 
